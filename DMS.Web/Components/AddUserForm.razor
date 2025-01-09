@@ -1,0 +1,85 @@
+﻿@using DMS.Application.UserCommand.AddUser
+@using DMS.Application.Devices
+@inject DeviceService DeviceService
+
+<button class="btn btn-primary" @onclick="ShowModal">Add User</button>
+
+<div class="modal @modalClass" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" style="display:@modalDisplay">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Add User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideModal"></button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@item" OnValidSubmit="HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <InputText id="name" class="form-control" @bind-Value="item.Name" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="department" class="form-label">Department</label>
+                        <InputText id="name" class="form-control" @bind-Value="item.Department" />
+                    </div>
+
+
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger mt-3">
+                            @errorMessage
+                        </div>
+                    }
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" @onclick="HideModal" class="btn btn-close"></button>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnDataChange { get; set; }
+    private string modalClass = "";
+    private string modalDisplay = "none";
+    private string errorMessage = "";
+
+    private AddUserDto item = new AddUserDto();
+
+    private void ShowModal()
+    {
+        modalClass = "show";
+        modalDisplay = "block";
+        errorMessage = "";
+    }
+
+    private void HideModal()
+    {
+        modalClass = "";
+        modalDisplay = "none";
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            await DeviceService.AddUserAsync(item);
+            HideModal();
+        }
+        catch (KeyNotFoundException ex)
+        {
+
+            errorMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An unexpected error occurred: {ex.Message}";
+        }
+
+    }
+    
+}

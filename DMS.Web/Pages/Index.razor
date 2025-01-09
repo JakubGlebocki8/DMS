@@ -1,0 +1,167 @@
+﻿@page "/"
+@using DMS.Application.DeviceCommad.EditDevice
+@using DMS.Application.Devices
+@inject DeviceService DeviceService
+@using DMS.Web.Components
+<PageTitle>DMS</PageTitle>
+
+<h3>Device List</h3>
+<AddDeviceForm OnDataChange="LoadDevice"></AddDeviceForm>
+<AllUsersPopup></AllUsersPopup>
+<AddUserForm></AddUserForm>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Serial Number</th>
+            <th>Day of Purchase</th>
+            <th>User</th>
+            <th>Release Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (devices != null && devices.Any())
+        {
+            @foreach (var device in devices)
+            {
+                <tr>
+                    <td>@device.Name</td>
+                    <td>@device.SerialNumber</td>
+                    <td>@device.DayOfPurchase.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        @if (string.IsNullOrEmpty(device.UserName))
+                        {
+                            <span>in magazine</span>
+                        }
+                        else
+                        {
+                            <span>@device.UserName</span>
+                        }
+                    </td>
+                    <td>
+                        @if (string.IsNullOrEmpty(device.UserName) || device.ReleseDate == null)
+                        {
+                            <span>in magazine</span>
+                        }
+                        else
+                        {
+                            <span>@device.ReleseDate?.ToString("dd/MM/yyyy")</span>
+                        }
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" @onclick="() => DeleteDevice(device.SerialNumber)">
+                            Delete
+                        </button>
+                        <button class="btn btn-primary" @onclick="() => EditDevice(device)">
+                            Edit
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6">No devices found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (isEditMode)
+{
+    <div class="card mt-4">
+        <div class="card-header">
+            Edit Device
+        </div>
+        <div class="card-body">
+            <EditForm Model="selectedDto" OnValidSubmit="SaveDevice">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input id="name" class="form-control" @bind="selectedDto.Name" />
+                </div>
+                <div class="mb-3">
+                    <label for="serialNumber" class="form-label">Serial Number</label>
+                    <input id="serialNumber" class="form-control" value="@selectedDto.SerialNumber" disabled />
+                </div>
+                <div class="mb-3">
+                    <label for="userName" class="form-label">User</label>
+                    <input id="userName" class="form-control" @bind="selectedDto.UserName" />
+                </div>
+                <div class="mb-3">
+                    <label for="dayOfPurchase" class="form-label">Day of Purchase</label>
+                    <input id="dayOfPurchase" type="date" class="form-control" @bind="selectedDto.DayOfPurchase" />
+                </div>
+                <div class="mb-3">
+                    <label for="releseDate" class="form-label">Release Date</label>
+                    <input id="releseDate" type="date" class="form-control" @bind="selectedDto.ReleseDate" />
+                </div>
+                <button type="submit" class="btn btn-success">Save</button>
+                <button type="button" class="btn btn-secondary" @onclick="CancelEdit">Cancel</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    @code {
+        private List<DeviceDto> devices;
+        private bool isEditMode = false;
+        private DeviceDto selectedDto = new DeviceDto();
+
+        protected override async Task OnInitializedAsync()
+        {
+            await LoadDevice();
+        }
+
+        private async Task DeleteDevice(string serialNumber)
+        {
+            var result = await DeviceService.DeleteDeviceAsync(serialNumber);
+            if (result)
+            {
+                await LoadDevice();
+            }
+        }
+
+        private async Task LoadDevice()
+        {
+            devices = await DeviceService.GetDeviceDtosAsync();
+        }
+
+        private void EditDevice(DeviceDto device)
+        {
+            selectedDto = new DeviceDto
+            {
+                Name = device.Name,
+                SerialNumber = device.SerialNumber,
+                UserName = device.UserName,
+                DayOfPurchase = device.DayOfPurchase,
+                ReleseDate = device.ReleseDate
+            };
+            isEditMode = true;
+        }
+
+        private async Task SaveDevice()
+        {
+           var commad = new EditDeviceCommand
+            {
+                Name = selectedDto.Name,
+                SerialNumber = selectedDto.SerialNumber,
+                UserName = selectedDto.UserName,
+                DayOfPurchase = selectedDto.DayOfPurchase,
+                ReleseDate = selectedDto.ReleseDate
+            };
+            await DeviceService.EditDevice(commad);
+            await LoadDevice();
+            isEditMode = false;
+        }
+
+        private void CancelEdit()
+        {
+            isEditMode = false;
+            selectedDto = new DeviceDto();
+        }
+    }
+
+}

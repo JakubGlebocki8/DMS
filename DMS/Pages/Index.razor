@@ -1,0 +1,27 @@
+﻿@page "/"
+@using DMS.Domain
+<PageTitle>DMS</PageTitle>
+@inject IDmsRepository repo
+
+<ul>
+    @if (devices != null && devices.Any())  
+    {
+        @foreach (var device in devices)
+        {
+            <li>@device.Name</li>
+        }
+    }
+    else
+    {
+        <li>No devices available.</li>  
+    }
+</ul>
+
+@code {
+    private List<DMS.Domain.Device> devices = new List<DMS.Domain.Device>();  
+
+    protected override async Task OnInitializedAsync()
+    {
+        devices = (await repo.GetAll()).ToList();  
+    }
+}

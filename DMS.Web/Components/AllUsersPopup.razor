@@ -1,0 +1,127 @@
+﻿@using DMS.Application.Devices
+@using DMS.Application.UserQuerry.GetAllUsers
+@using DMS.Application.UserCommand.EditUser
+@inject DeviceService DeviceService
+
+<button class="btn btn-primary" @onclick="ShowModal">Show Users</button>
+
+<div class="modal @modalClass" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" style="display:@modalDisplay">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">User List</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideModal"></button>
+            </div>
+            <div class="modal-body">
+                <AddUserForm OnDataChange="LoadUsers"></AddUserForm>
+                @if (users != null && users.Any())
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Devices</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in users)
+                            {
+                                <tr>
+                                    <td>@user.Name</td>
+                                    <td>@user.department</td>
+                                    <td>@user.CountOfDevices</td>
+                                    <td>
+                                        <button class="btn btn-primary" @onclick="() => EditUser(user)">Edit</button>
+                                        <button class="btn btn-danger" @onclick="()=> DeleteUser(user.Name)">Delete</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>No users found.</p>
+                }
+                @if (isEditMode)
+                {
+                    <h5>Edit User</h5>
+                    <form>
+                        <div class="mb-3">
+                            <label for="userName" class="form-label">Name</label>
+                            <input type="text" id="userName" value="@selectedUser.Name" disabled class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="department" class="form-label">Department</label>
+                            <input type="text" id="department" class="form-control" @bind="selectedUser.department" />
+                        </div>
+                        <button class="btn btn-success" @onclick="UpdateUser">Save Changes</button>
+                    </form>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="HideModal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string modalClass = "";
+    private string modalDisplay = "none";
+    private List<UserDto> users = new List<UserDto>();
+    private UserDto selectedUser = new UserDto();
+    private bool isEditMode = false;
+
+    private async Task ShowModal()
+    {
+        await LoadUsers();
+        modalClass = "show";
+        modalDisplay = "block";
+    }
+
+    private async Task LoadUsers()
+    {
+        users = await DeviceService.GetAllUsersAsync();
+    }
+
+    private void HideModal()
+    {
+        modalClass = "";
+        modalDisplay = "none";
+        isEditMode = false;
+        selectedUser = new UserDto();
+    }
+
+    private void EditUser(UserDto user)
+    {
+        selectedUser = new UserDto
+            {
+                Name = user.Name,
+                department = user.department,
+
+            };
+        isEditMode = true;
+    }
+
+    private async Task UpdateUser()
+    {
+        var command = new EditUserCommand
+            {
+                Name = selectedUser.Name,
+                department = selectedUser.department
+            };
+
+        await DeviceService.EditUser(command);
+        await LoadUsers();
+        isEditMode = false;
+    }
+    private async Task DeleteUser(string name){
+        var result = await DeviceService.DeleteUserAsync(name);
+        if(result){
+            await LoadUsers();
+        }
+    }
+}
