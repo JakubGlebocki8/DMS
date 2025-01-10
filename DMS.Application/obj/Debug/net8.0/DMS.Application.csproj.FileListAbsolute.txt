@@ -52,3 +52,4 @@ C:\Users\glebo\Desktop\DMS-kopia\DMS.Application\obj\Debug\net8.0\DMS.Applicatio
 C:\Users\glebo\Desktop\DMS-kopia\DMS.Application\obj\Debug\net8.0\refint\DMS.Application.dll
 C:\Users\glebo\Desktop\DMS-kopia\DMS.Application\obj\Debug\net8.0\DMS.Application.pdb
 C:\Users\glebo\Desktop\DMS-kopia\DMS.Application\obj\Debug\net8.0\ref\DMS.Application.dll
+C:\Users\glebo\Desktop\DMS-kopia\DMS.Application\obj\Debug\net8.0\DMS.Application.sourcelink.json

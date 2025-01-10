@@ -64,3 +64,4 @@ C:\Users\glebo\Desktop\DMS-kopia\DMS.Infrastructure\obj\Debug\net8.0\refint\DMS.
 C:\Users\glebo\Desktop\DMS-kopia\DMS.Infrastructure\obj\Debug\net8.0\DMS.Infrastructure.pdb
 C:\Users\glebo\Desktop\DMS-kopia\DMS.Infrastructure\obj\Debug\net8.0\DMS.Infrastructure.genruntimeconfig.cache
 C:\Users\glebo\Desktop\DMS-kopia\DMS.Infrastructure\obj\Debug\net8.0\ref\DMS.Infrastructure.dll
+C:\Users\glebo\Desktop\DMS-kopia\DMS.Infrastructure\obj\Debug\net8.0\DMS.Infrastructure.sourcelink.json

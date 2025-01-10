@@ -570,3 +570,4 @@ C:\Users\glebo\Desktop\DMS-kopia\DMS.Web\obj\Debug\net8.0\refint\DMS.Web.dll
 C:\Users\glebo\Desktop\DMS-kopia\DMS.Web\obj\Debug\net8.0\DMS.Web.pdb
 C:\Users\glebo\Desktop\DMS-kopia\DMS.Web\obj\Debug\net8.0\DMS.Web.genruntimeconfig.cache
 C:\Users\glebo\Desktop\DMS-kopia\DMS.Web\obj\Debug\net8.0\ref\DMS.Web.dll
+C:\Users\glebo\Desktop\DMS-kopia\DMS.Web\obj\Debug\net8.0\DMS.Web.sourcelink.json

@@ -38,6 +38,7 @@ namespace DMS.Application.DeviceCommad.EditDevice
             device.Name = request.Name;
             device.DayOfPurchase = request.DayOfPurchase;
             device.ReleaseDate = request.ReleseDate;
+            device.DayOfPurchase = request?.DayOfPurchase;
             await _repository.Commit();
             return Unit.Value;
 

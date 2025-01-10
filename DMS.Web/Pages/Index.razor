@@ -2,7 +2,7 @@
 @using DMS.Application.DeviceCommad.EditDevice
 @using DMS.Application.Devices
 @inject DeviceService DeviceService
-@using DMS.Web.Components
+@using DMS.Web.Pages.Components
 <PageTitle>DMS</PageTitle>
 
 <h3>Device List</h3>
@@ -46,7 +46,14 @@
                         }
                         else
                         {
-                            <span>@device.ReleseDate?.ToString("dd/MM/yyyy")</span>
+                            if(device.ReleseDate > device.DayOfPurchase)
+                            {
+                                <span>@device.ReleseDate?.ToString("dd/MM/yyyy")</span>
+                            }
+                            else{
+                                <span>in magazine</span>
+                            }
+                            
                         }
                     </td>
                     <td>
