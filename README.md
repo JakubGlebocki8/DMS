@@ -43,7 +43,7 @@ Ułatwienia zarządzania przepływem danych, redukując ilość ręcznie pisanej
 - Rozbicie DeviceService na UserService oraz DeviceService
 - Napisac validacje 
 ## Autor
-- Jakub Głębocki
+- Jakub Głębocki 160531
 # Phtos
 ![image](https://github.com/user-attachments/assets/87a5522b-baed-4592-a17a-a1bfbb4f3235)
 ![image](https://github.com/user-attachments/assets/1f975e76-db85-475d-b4ab-a53176534533)
